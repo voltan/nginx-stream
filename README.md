@@ -53,16 +53,14 @@ Current Image is built using:
    ```
 ## Example
 
-* Stat : https://www.example.com/stat
-
 ### Stream live RTMP
 
-* rtmp://www.example.com:1935/live/<stream_key>
+* `rtmp://www.example.com:1935/live/<stream_key>`
 
 ### View the stream
-* https://www.example.com/hls/<stream-key>.m3u8
-* https://www.example.com/dash/<stream-key>_src.mpd
+* `https://www.example.com/hls/<stream-key>.m3u8`
+* `https://www.example.com/dash/<stream-key>_src.mpd`
 
 ### Statistic
-* https://www.example.com/stats
+* `https://www.example.com/stats`
 
