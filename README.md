@@ -17,6 +17,8 @@ Current Image is built using:
  * Nginx-rtmp-module 1.2.1 (compiled from source)
  * Nginx-vod-module 1.27 (compiled from source)
  * FFmpeg 4.3.1 (compiled from source)
+  
+This image was inspired by similar docker images from [TareqAlqutami](https://github.com/TareqAlqutami/rtmp-hls-server) and [dojocasts](https://gitlab.com/dojocasts/nginx-vod-module-docker) and [nytimes](https://github.com/nytimes/nginx-vod-module-docker).
 
 ## Domain
 After install this image, Set domain or sub domain to server IP on your domain or dns control panel, and call all urls by domain instead of server IP, Push to this domain and watch output on this domain too 
@@ -79,4 +81,5 @@ After install this image, Set domain or sub domain to server IP on your domain o
    ```
    docker run -d -p 1935:1935 -p 80:80 -p 443:443 -v $PWD/conf/nginx_domain.conf:/etc/nginx/nginx.conf -v $PWD/videos:/opt/static/videos -v /var/www:/var/www -v /etc/letsencrypt:/etc/letsencrypt nginx-stream
    ```
-
+## Copyright
+Released under MIT license.
