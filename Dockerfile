@@ -4,9 +4,10 @@ ARG DEBIAN_VERSION=stretch-slim
 FROM debian:${DEBIAN_VERSION} as builder
 MAINTAINER Hossein Azizabadi Farahani <hossein@azizabadi.com>
 
-# Versions of nginx, rtmp-module and ffmpeg
+# Versions of nginx, rtmp-module, vod-module and ffmpeg
 ARG  NGINX_VERSION=1.18.0
 ARG  NGINX_RTMP_MODULE_VERSION=1.2.1
+ARG  NGINX_VOD_MODULE_VERSION=1.27
 ARG  FFMPEG_VERSION=4.3.1
 
 # Install dependencies
@@ -33,6 +34,12 @@ RUN cd /tmp/build && \
     tar -zxf v${NGINX_RTMP_MODULE_VERSION}.tar.gz && \
 	rm v${NGINX_RTMP_MODULE_VERSION}.tar.gz
 
+# Download vod-module source
+RUN cd /tmp/build && \
+    wget https://github.com/kaltura/nginx-vod-module/archive/${NGINX_VOD_MODULE_VERSION}.tar.gz && \
+    tar -zxf ${NGINX_VOD_MODULE_VERSION}.tar.gz && \
+    rm ${NGINX_VOD_MODULE_VERSION}.tar.gz
+
 # Build nginx with nginx-rtmp module
 RUN cd /tmp/build/nginx-${NGINX_VERSION} && \
     ./configure \
@@ -44,8 +51,11 @@ RUN cd /tmp/build/nginx-${NGINX_VERSION} && \
         --lock-path=/var/lock/nginx.lock \
         --http-client-body-temp-path=/tmp/nginx-client-body \
         --with-http_ssl_module \
-        --with-threads \
-        --add-module=/tmp/build/nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION} && \
+	    --with-file-aio \
+	    --with-threads \
+	    --with-cc-opt="-O3" \
+        --add-module=/tmp/build/nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION} \
+        --add-module=/tmp/build/nginx-vod-module-${NGINX_VOD_MODULE_VERSION} && \
     make -j $(getconf _NPROCESSORS_ONLN) && \
     make install
 
@@ -105,7 +115,7 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
     ln -sf /dev/stderr /var/log/nginx/error.log
 
 # Copy  nginx config file to container
-COPY conf/nginx.conf /etc/nginx/nginx.conf
+COPY conf/nginx_simple.conf /etc/nginx/nginx.conf
 
 EXPOSE 1935
 EXPOSE 80
