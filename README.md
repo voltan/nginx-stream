@@ -1,9 +1,30 @@
-# nginx-rtmp-module-docker
+## Description
 
+This Docker image can be used to create a video streaming server that supports [**RTMP**](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol), [**HLS**](https://en.wikipedia.org/wiki/HTTP_Live_Streaming), [**DASH**](https://en.wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP) out of the box. 
+It also allows adaptive streaming and custom transcoding of video streams.
+All modules are built from source on Debian and Alpine Linux base images.
+
+## Features
+ * The backend is [**Nginx**](http://nginx.org/en/) with [**nginx-rtmp-module**](https://github.com/arut/nginx-rtmp-module).
+ * [**FFmpeg**](https://www.ffmpeg.org/) for transcoding and adaptive streaming.
+ * Default settings: 
+	* RTMP is ON
+	* HLS is ON (adaptive, 5 variants)
+	* DASH is ON 
+	* Other Nginx configuration files are also provided to allow for RTMP-only streams or no-FFmpeg transcoding. 
+
+Current Image is built using:
+ * Nginx 1.18.0 (compiled from source)
+ * Nginx-rtmp-module 1.2.1 (compiled from source)
+ * FFmpeg 4.3.1 (compiled from source)
+
+
+
+## Building locally
 * 1- Install docker
 * 2- Clone this git repo and build image by : `docker build -t nginxlive -f Dockerfile .`
 * 2- Add domain or sub domain to server IP on your domain or dns control panel 
-* 3- Setup LetsEncrypt ( certbot ) on server 
+* 3- Install LetsEncrypt ( certbot ) on server 
 
    ```
   yum -y install yum-utils
@@ -30,8 +51,18 @@
    ```
    docker run -d -p 1935:1935 -p 80:80 -p 443:443 -v $PWD/conf/nginx_domain.conf:/etc/nginx/nginx.conf -v /var/www:/var/www -v /etc/letsencrypt:/etc/letsencrypt nginxlive
    ```
+## Example
 
+* Stat : https://www.example.com/stat
 
+### Stream live RTMP
 
+* rtmp://www.example.com:1935/live/<stream_key>
 
+### View the stream
+* https://www.example.com/hls/<stream-key>.m3u8
+* https://www.example.com/dash/<stream-key>_src.mpd
+
+### Statistic
+* https://www.example.com/stats
 
