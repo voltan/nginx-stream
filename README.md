@@ -15,7 +15,7 @@
 * 5- Run fist time docker image on port 80 and 443 like this example just for setup SSL by default nginx config
 
    ``` 
-   docker run -d -p 1935:1935 -p 80:80 -p 443:443 -v ./conf/nginx.conf:/etc/nginx/nginx.conf -v /var/www:/var/www  nginxlive
+   docker run -d -p 1935:1935 -p 80:80 -p 443:443 -v $PWD/conf/nginx.conf:/etc/nginx/nginx.conf -v /var/www:/var/www  nginxlive
    ```
    
 * 6- Run cerboot like this ( replace www.example.com to your domain name )
@@ -28,7 +28,7 @@
 * 8- Edit 'nginx_domain.conf' and put replace `www.example.com` to your domain name and run again by command like this
 
    ```
-   docker run -d -p 1935:1935 -p 80:80 -p 443:443 -v ./conf/nginx_domain.conf:/etc/nginx/nginx.conf -v /var/www:/var/www -v /etc/letsencrypt:/etc/letsencrypt nginxlive
+   docker run -d -p 1935:1935 -p 80:80 -p 443:443 -v $PWD/conf/nginx_domain.conf:/etc/nginx/nginx.conf -v /var/www:/var/www -v /etc/letsencrypt:/etc/letsencrypt nginxlive
    ```
 
 
