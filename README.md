@@ -20,6 +20,9 @@ Current Image is built using:
   
 This image was inspired by similar docker images from [TareqAlqutami](https://github.com/TareqAlqutami/rtmp-hls-server) and [dojocasts](https://gitlab.com/dojocasts/nginx-vod-module-docker) and [nytimes](https://github.com/nytimes/nginx-vod-module-docker).
 
+## Install
+Install this image just by run `docker pull voltan/nginx-stream`
+
 ## Domain
 After install this image, Set domain or sub domain to server IP on your domain or dns control panel, and call all urls by domain instead of server IP, Push to this domain and watch output on this domain too 
 
@@ -59,16 +62,21 @@ After install this image, Set domain or sub domain to server IP on your domain o
 
 ## URLs
 **Stream live RTMP**
- > `rtmp://www.example.com:1935/live/<stream_key>`
+ - `rtmp://www.example.com:1935/live/<stream_key>`
 
 **View live stream**
- > `https://www.example.com/hls/<stream-key>.m3u8`
+ - `https://www.example.com/hls/<stream-key>.m3u8`
 
 **View vod stream**
- > `https://www.example.com/vod/<file-name>.mp4/master.m3u8`
+ - `https://www.example.com/vod/<file-name>.mp4/master.m3u8`
 
 **Statistic**
- > `https://www.example.com/stats`
+ - `https://www.example.com/stats`
+
+## Building locally
+* 1- Clone this git repo by `git clone https://github.com/voltan/nginx-stream.git` command
+* 2- Build image by `docker build -t nginx-stream -f Dockerfile .` command
+* 3- Continue by setup domain, ssl and run service
 
 ## Copyright
 Released under MIT license.
