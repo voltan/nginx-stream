@@ -9,8 +9,8 @@ All modules are built from source on Debian and Alpine Linux base images.
  * [**FFmpeg**](https://www.ffmpeg.org/) for transcoding and adaptive streaming.
  * Default settings: 
 	* RTMP is ON
-	* HLS Live is ON (adaptive, 5 variants)
-	* HLS Vod is ON (adaptive, 5 variants) 
+	* HLS Live is ON (adaptive, multi variants by call ffmpeg on config)
+	* HLS Vod is ON
 
 Current Image is built using:
  * Nginx 1.18.0 (compiled from source)
@@ -26,60 +26,49 @@ After install this image, Set domain or sub domain to server IP on your domain o
 ## SSL
  * You can by ssl certificate for your domain, upload certificate on server and put certificate path in docker run command.
  * If you want use LetsEncrypt ( certbot ), setup certbot on your server and create certificate for your domain and put certificate path in docker run command.
+   * 1- Install LetsEncrypt ( certbot ) on server 
+      ```
+      yum -y install yum-utils
+      yum-config-manager --enable rhui-REGION-rhel-server-extras rhui-REGION-rhel-server-optional
+      yum install certbot
+      ```
+   * 2- Make well-known path on `/var/www/.well-known`, by this command `mkdir /var/www/.well-known`
+   * 3- Run docker image by `nginx_simple.conf` on port 80 and 443 like this example just for setup SSL by default nginx config
+     ``` 
+     docker run -p 1935:1935 -p 80:80 -p 443:443 -v $PWD/conf/nginx_simple.conf:/etc/nginx/nginx.conf -v /var/www:/var/www  nginx-stream
+     ```
+   * 4- Run cerboot like this ( replace `www.example.com` to your domain name )    
+     ```
+     certbot certonly --webroot -w /var/www/ -d www.example.com
+     ```
+   * 5- After setup SSL certificate, stop container and go to next steps
+
+## Run service
+ * 1- You should run this image just by customize `[nginx_domain.conf]()` or `nginx_domain_ffmpeg.conf` (for multi bitrate support by ffmpeg)
+   * Get [nginx_domain.conf](https://github.com/voltan/nginx-stream/blob/master/conf/nginx_domain.conf) for run service normally
+   * Get [nginx_domain_ffmpeg.conf](https://github.com/voltan/nginx-stream/blob/master/conf/nginx_domain_ffmpeg.conf) for run multi bitrate support by ffmpeg
+ * 2- Create `videos` folder on your server Vod server and put your videos on it
+ * 3- Edit `nginx_domain.conf` or `nginx_domain_ffmpeg.conf` and put replace `www.example.com` to your domain name and put it on your server
+ * 4- Edit `nginx_domain.conf` or `nginx_domain_ffmpeg.conf` and put SSL certificate information on it ( by default, LetsEncrypt information added )
+ * 5- Run image by command like this :
+       
+    ```
+    docker run -p 1935:1935 -p 80:80 -p 443:443 -v $PWD/conf/nginx_domain.conf:/etc/nginx/nginx.conf -v $PWD/videos:/opt/static/videos -v /var/www:/var/www -v /etc/letsencrypt:/etc/letsencrypt voltan/nginx-stream
+    ```
+ * 6- For run image on background, just add `-d` after docker run on previous command
 
 ## URLs
 **Stream live RTMP**
- * `rtmp://www.example.com:1935/live/<stream_key>`
+ > `rtmp://www.example.com:1935/live/<stream_key>`
 
 **View live stream**
- * `https://www.example.com/hls/<stream-key>.m3u8`
+ > `https://www.example.com/hls/<stream-key>.m3u8`
 
 **View vod stream**
- * `https://www.example.com/vod/<file-name>.mp4/master.m3u8`
+ > `https://www.example.com/vod/<file-name>.mp4/master.m3u8`
 
 **Statistic**
- * `https://www.example.com/stats`
+ > `https://www.example.com/stats`
 
-## Run service
- * 1- You need run this image just by customize `nginx_domain.conf` file
- * 2- Edit 'nginx_domain.conf' and put replace `www.example.com` to your domain name and put it on your server
- * 3- Edit 'nginx_domain.conf' and put SSL certificate information on it ( by default, LetsEncrypt information added )
- * 4- Run image by command like this :
-       
-    ```
-    docker run -d -p 1935:1935 -p 80:80 -p 443:443 -v $PWD/conf/nginx_domain.conf:/etc/nginx/nginx.conf -v $PWD/videos:/opt/static/videos -v /var/www:/var/www -v /etc/letsencrypt:/etc/letsencrypt voltan/nginx-stream
-    ```
-
-## Building locally
-* 1- Install docker
-* 2- Clone this git repo and build image by : `docker build -t nginx-stream -f Dockerfile .`
-* 2- Add domain or sub domain to server IP on your domain or dns control panel 
-* 3- Install LetsEncrypt ( certbot ) on server 
-
-   ```
-   yum -y install yum-utils
-   yum-config-manager --enable rhui-REGION-rhel-server-extras rhui-REGION-rhel-server-optional
-   yum install certbot
-   ```
-
-* 4- Make well-known path on `/var/www/.well-known`, by this command `mkdir /var/www/.well-known`
-* 5- Run fist time docker image on port 80 and 443 like this example just for setup SSL by default nginx config
-
-   ``` 
-   docker run -d -p 1935:1935 -p 80:80 -p 443:443 -v $PWD/conf/nginx_simple.conf:/etc/nginx/nginx.conf -v /var/www:/var/www  nginx-stream
-   ```
-   
-* 6- Run cerboot like this ( replace `www.example.com` to your domain name )
-
-   ```
-   certbot certonly --webroot -w /var/www/ -d www.example.com
-   ```
-
-* 7- After setup SSL certificate, stop container
-* 8- Edit 'nginx_domain.conf' and put replace `www.example.com` to your domain name and run again by command like this
-
-   ```
-   docker run -d -p 1935:1935 -p 80:80 -p 443:443 -v $PWD/conf/nginx_domain.conf:/etc/nginx/nginx.conf -v $PWD/videos:/opt/static/videos -v /var/www:/var/www -v /etc/letsencrypt:/etc/letsencrypt nginx-stream
-   ```
 ## Copyright
 Released under MIT license.
