@@ -48,7 +48,7 @@ After install this image, Set domain or sub domain to server IP on your domain o
      ```
  * 5- After setup SSL certificate, stop container and go to next steps
 
-## Run service
+## Run Service
  * 1- You should run this image just by customize `[nginx_domain.conf]()` or `nginx_domain_ffmpeg.conf` (for multi bitrate support by ffmpeg)
    * Get [nginx_domain.conf](https://github.com/voltan/nginx-stream/blob/master/conf/nginx_domain.conf) for run service normally
    * Get [nginx_domain_ffmpeg.conf](https://github.com/voltan/nginx-stream/blob/master/conf/nginx_domain_ffmpeg.conf) for run multi bitrate support by ffmpeg
@@ -75,7 +75,7 @@ After install this image, Set domain or sub domain to server IP on your domain o
 **Statistic**
  - `https://www.example.com/stats`
 
-## Building locally
+## Building Locally
 * 1- Clone this git repo by : `git clone https://github.com/voltan/nginx-stream.git` 
 * 2- Build image by : `docker build -t nginx-stream -f Dockerfile .`
 * 3- Continue by setup domain, ssl and run service
