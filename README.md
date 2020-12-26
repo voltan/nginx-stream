@@ -5,7 +5,7 @@ All modules are built from source on Debian and Alpine Linux base images.
 
 ## Features
  * The backend is [**Nginx**](http://nginx.org/en/) with [**nginx-rtmp-module**](https://github.com/arut/nginx-rtmp-module) and [**nginx-vod-module**](https://github.com/kaltura/nginx-vod-module).
- * [**FFmpeg**](https://www.ffmpeg.org/) for transcoding and adaptive streaming.
+ * [**FFmpeg**](https://www.ffmpeg.org/) for transcoding and adaptive streaming. (Just for Live streaming)
  * Default settings: 
 	* RTMP is ON
 	* HLS Live is ON (adaptive, multi variants by call ffmpeg on config)
