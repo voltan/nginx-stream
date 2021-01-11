@@ -8,6 +8,7 @@ MAINTAINER Hossein Azizabadi Farahani <hossein@azizabadi.com>
 ARG  NGINX_VERSION=1.18.0
 ARG  NGINX_RTMP_MODULE_VERSION=1.2.1
 ARG  NGINX_VOD_MODULE_VERSION=1.27
+ARG  NGINX_SECURE_MODULE_VERSION=1.4
 ARG  FFMPEG_VERSION=4.3.1
 
 # Install dependencies
@@ -40,6 +41,12 @@ RUN cd /tmp/build && \
     tar -zxf ${NGINX_VOD_MODULE_VERSION}.tar.gz && \
     rm ${NGINX_VOD_MODULE_VERSION}.tar.gz
 
+# Download vod-module source
+RUN cd /tmp/build && \
+    wget https://github.com/kaltura/nginx-secure-token-module/archive/${NGINX_SECURE_MODULE_VERSION}.tar.gz && \
+    tar -zxf ${NGINX_SECURE_MODULE_VERSION}.tar.gz && \
+    rm ${NGINX_SECURE_MODULE_VERSION}.tar.gz
+
 # Build nginx with nginx-rtmp module
 RUN cd /tmp/build/nginx-${NGINX_VERSION} && \
     ./configure \
@@ -55,7 +62,8 @@ RUN cd /tmp/build/nginx-${NGINX_VERSION} && \
 	    --with-threads \
 	    --with-cc-opt="-O3" \
         --add-module=/tmp/build/nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION} \
-        --add-module=/tmp/build/nginx-vod-module-${NGINX_VOD_MODULE_VERSION} && \
+        --add-module=/tmp/build/nginx-vod-module-${NGINX_VOD_MODULE_VERSION} \
+        --add-module=/tmp/build/nginx-secure-token-module-${NGINX_SECURE_MODULE_VERSION} && \
     make -j $(getconf _NPROCESSORS_ONLN) && \
     make install
 
